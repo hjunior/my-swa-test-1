@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Campanhas de Fidelidade</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .invalid-feedback {
+            display: block;
+        }
+        .audit-log {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Gerenciamento de Campanhas de Fidelidade</h1>
+        
+        <!-- Campaign Registration Form -->
+        <div class="form-container">
+            <h2>Cadastro de Nova Campanha</h2>
+            
+            <form id="campaignForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="id" class="form-label">ID da Campanha</label>
+                    <input type="text" class="form-control" id="id" required>
+                    <div class="invalid-feedback">Por favor, insira um ID válido.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="configType" class="form-label">Tipo de Configuração</label>
+                    <select class="form-select" id="configType" required>
+                        <option value="">Selecione...</option>
+                        <option value="personal">Personal</option>
+                        <option value="shareable">Shareable</option>
+                    </select>
+                    <div class="invalid-feedback">Por favor, selecione um tipo de configuração.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="rewardUuid" class="form-label">Reward UUID</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="rewardUuid" required>
+                        <button class="btn btn-outline-secondary" type="button" id="validateReward">Validar Reward</button>
+                    </div>
+                    <div class="invalid-feedback">Por favor, insira um Reward UUID válido.</div>
+                    <div id="rewardValidationStatus" class="mt-2"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descrição</label>
+                    <textarea class="form-control" id="description" rows="3" required></textarea>
+                    <div class="invalid-feedback">Por favor, insira uma descrição.</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="startDate" class="form-label">Data de Início</label>
+                        <input type="text" class="form-control" id="startDate" required>
+                        <div class="invalid-feedback">Por favor, selecione uma data de início.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="endDate" class="form-label">Data de Término</label>
+                        <input type="text" class="form-control" id="endDate" required>
+                        <div class="invalid-feedback">Por favor, selecione uma data de término.</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="rewardExpiration" class="form-label">Data de Expiração da Recompensa</label>
+                        <input type="text" class="form-control" id="rewardExpiration" required>
+                        <div class="invalid-feedback">Por favor, selecione uma data de expiração.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="currentRedemptions" class="form-label">Redenções Atuais</label>
+                        <input type="number" class="form-control" id="currentRedemptions" min="0" required>
+                        <div class="invalid-feedback">Por favor, insira um número válido de redenções.</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Validação Anti-Fraude</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="antiFraud" id="phoneValidation" value="phone" required>
+                        <label class="form-check-label" for="phoneValidation">Validação por Telefone</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="antiFraud" id="emailValidation" value="email">
+                        <label class="form-check-label" for="emailValidation">Validação por Email</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="isExtractable" required>
+                        <label class="form-check-label" for="isExtractable">Campanha Extraível</label>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Salvar Campanha</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Approval Section -->
+        <div class="form-container mt-4">
+            <h2>Aprovação de Campanha</h2>
+            <div id="approvalSection">
+                <div class="alert alert-info">
+                    Esta campanha está aguardando aprovação do Gerente de Marketing.
+                </div>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Detalhes da Campanha</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>ID da Campanha:</strong> CAM-2025-001</p>
+                                <p><strong>Tipo de Configuração:</strong> Personal</p>
+                                <p><strong>Status Atual:</strong> Em Análise</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Data de Criação:</strong> 09/06/2025</p>
+                                <p><strong>Criado por:</strong> Analista de Marketing</p>
+                                <p><strong>Última Atualização:</strong> 09/06/2025 15:16</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-success" id="approveCampaign">
+                        <i class="bi bi-check-lg"></i> Aprovar Campanha
+                    </button>
+                    <button type="button" class="btn btn-danger" id="rejectCampaign">
+                        <i class="bi bi-x-lg"></i> Rejeitar Campanha
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Log -->
+        <div class="audit-log mt-4">
+            <h3>Log de Auditoria</h3>
+            <div id="auditLog" class="mt-2">
+                <div class="alert alert-info mb-2">
+                    <strong>09/06/2025 15:16:24</strong> - Campanha criada pelo Analista de Marketing
+                </div>
+                <div class="alert alert-info mb-2">
+                    <strong>09/06/2025 15:16:24</strong> - Reward UUID validado com sucesso
+                </div>
+                <div class="alert alert-info mb-2">
+                    <strong>09/06/2025 15:16:24</strong> - Campos obrigatórios validados
+                </div>
+                <div class="alert alert-info mb-2">
+                    <strong>09/06/2025 15:16:24</strong> - Campanha enviada para aprovação
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize date pickers
+        flatpickr("#startDate", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
+        flatpickr("#endDate", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
+        flatpickr("#rewardExpiration", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
+
+        // Form validation
+        const form = document.getElementById('campaignForm');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+
+        // Reward UUID validation
+        document.getElementById('validateReward').addEventListener('click', function() {
+            const rewardUuid = document.getElementById('rewardUuid').value;
+            const statusDiv = document.getElementById('rewardValidationStatus');
+            
+            // Simulated API call to Brierley
+            fetch(`/api/brierley/validate/${rewardUuid}`)
+                .then(response => response.json())
+                .then(data => {
+                    statusDiv.innerHTML = data.valid ? 
+                        `<div class="alert alert-success">Reward UUID válido</div>` :
+                        `<div class="alert alert-danger">Reward UUID inválido</div>`;
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = `<div class="alert alert-danger">Erro ao validar Reward UUID</div>`;
+                });
+        });
+
+        // Campaign approval
+        document.getElementById('approveCampaign').addEventListener('click', function() {
+            // Simulated API call to Partnership
+            fetch('/api/partnership/approve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    campaignId: document.getElementById('id').value,
+                    status: 'approved',
+                    approvedBy: 'Gerente de Marketing'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addAuditLog('Campanha aprovada com sucesso');
+                updateApprovalStatus('Aprovada');
+            });
+        });
+
+        // Add audit log entry
+        function addAuditLog(message) {
+            const logDiv = document.getElementById('auditLog');
+            const entry = document.createElement('div');
+            entry.className = 'alert alert-info mb-2';
+            entry.innerHTML = `
+                <strong>${new Date().toLocaleString()}</strong> - ${message}
+            `;
+            logDiv.insertBefore(entry, logDiv.firstChild);
+        }
+
+        // Update approval status
+        function updateApprovalStatus(status) {
+            const approvalSection = document.getElementById('approvalSection');
+            approvalSection.classList.remove('d-none');
+            approvalSection.querySelector('.alert').innerHTML = 
+                `Esta campanha está ${status}`;
+        }
+    </script>
+</body>
+</html>

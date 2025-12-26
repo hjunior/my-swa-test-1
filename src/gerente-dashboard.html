@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gerente de Marketing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            padding: 2rem;
+        }
+        .campaign-card {
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container dashboard-container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Sistema de Campanhas</a>
+                <div class="navbar-nav ms-auto">
+                    <span class="nav-item nav-link">Bem-vindo, Gerente de Marketing</span>
+                    <a class="nav-item nav-link" href="login.html">Sair</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="row">
+            <!-- Campaign Approval Section -->
+            <div class="col-md-12">
+                <div class="card campaign-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Aprovação de Campanhas</h5>
+                        <div>
+                            <button class="btn btn-primary me-2" onclick="window.location.href='cadastro-campanha.html'">
+                                Nova Campanha
+                            </button>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="campaignSearch" placeholder="Buscar campanhas...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchCampaigns()">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Descrição</th>
+                                        <th>Tipo</th>
+                                        <th>Status</th>
+                                        <th>Data de Criação</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="campaignsTableBody">
+                                    <!-- Campaigns will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>Mostrando <span id="campaignsCount">0</span> campanhas</div>
+                            <nav aria-label="Paginação de campanhas">
+                                <ul class="pagination">
+                                    <li class="page-item" id="campaignsPrevious">
+                                        <a class="page-link" href="#" aria-label="Anterior">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active" id="campaignsCurrentPage">
+                                        <a class="page-link" href="#">1</a>
+                                    </li>
+                                    <li class="page-item" id="campaignsNext">
+                                        <a class="page-link" href="#" aria-label="Próximo">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Log Section -->
+            <div class="col-md-12">
+                <div class="card campaign-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Log de Auditoria</h5>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="auditSearch" placeholder="Buscar logs...">
+                            <button class="btn btn-outline-secondary" type="button" onclick="searchAuditLogs()">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Usuário</th>
+                                        <th>Tipo de Ação</th>
+                                        <th>Descrição</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="auditLogsTableBody">
+                                    <!-- Audit logs will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>Mostrando <span id="auditLogsCount">0</span> registros</div>
+                            <nav aria-label="Paginação de logs">
+                                <ul class="pagination">
+                                    <li class="page-item" id="auditLogsPrevious">
+                                        <a class="page-link" href="#" aria-label="Anterior">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active" id="auditLogsCurrentPage">
+                                        <a class="page-link" href="#">1</a>
+                                    </li>
+                                    <li class="page-item" id="auditLogsNext">
+                                        <a class="page-link" href="#" aria-label="Próximo">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuration and data
+        const ITEMS_PER_PAGE = 10;
+        let currentPage = 1;
+        
+        // Original data arrays
+        const originalCampaigns = [
+            {
+                id: 'CAM-2025-001',
+                description: 'Campanha de Fidelidade Q2',
+                type: 'Personal',
+                status: 'Em Análise',
+                creationDate: '09/06/2025',
+                actions: [
+                    { type: 'button', text: 'Aprovar', class: 'btn-success', icon: 'bi-check-lg', onclick: 'approveCampaign("CAM-2025-001")' },
+                    { type: 'button', text: 'Rejeitar', class: 'btn-danger', icon: 'bi-x-lg', onclick: 'rejectCampaign("CAM-2025-001")' }
+                ]
+            },
+            {
+                id: 'CAM-2025-002',
+                description: 'Campanha de Fidelidade Q3',
+                type: 'Corporate',
+                status: 'Pendente',
+                creationDate: '09/06/2025',
+                actions: [
+                    { type: 'button', text: 'Aprovar', class: 'btn-success', icon: 'bi-check-lg', onclick: 'approveCampaign("CAM-2025-002")' },
+                    { type: 'button', text: 'Rejeitar', class: 'btn-danger', icon: 'bi-x-lg', onclick: 'rejectCampaign("CAM-2025-002")' }
+                ]
+            },
+            {
+                id: 'CAM-2025-003',
+                description: 'Campanha de Fidelidade Q4',
+                type: 'Personal',
+                status: 'Aprovada',
+                creationDate: '09/06/2025',
+                actions: [
+                    { type: 'button', text: 'Aprovar', class: 'btn-success', icon: 'bi-check-lg', onclick: 'approveCampaign("CAM-2025-003")' },
+                    { type: 'button', text: 'Rejeitar', class: 'btn-danger', icon: 'bi-x-lg', onclick: 'rejectCampaign("CAM-2025-003")' }
+                ]
+            }
+        ];
+
+        // Working arrays
+        let campaigns = [...originalCampaigns];
+        
+        // Audit logs data
+        const auditLogsData = [
+            {
+                date: '09/06/2025 15:16:24',
+                user: 'Analista de Marketing',
+                actionType: 'Cadastro',
+                description: 'Criou nova campanha',
+                status: 'Pendente'
+            },
+            {
+                date: '09/06/2025 15:16:24',
+                user: 'Sistema',
+                actionType: 'Validação',
+                description: 'Validou Reward UUID',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:25',
+                user: 'Analista de Marketing',
+                actionType: 'Validação',
+                description: 'Validou campos obrigatórios',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:26',
+                user: 'Sistema',
+                actionType: 'Integração',
+                description: 'Enviou dados para Brierley',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:27',
+                user: 'Brierley',
+                actionType: 'Validação',
+                description: 'Validou Reward UUID CAM-2025-001',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:28',
+                user: 'Sistema',
+                actionType: 'Registro',
+                description: 'Campanha enviada para aprovação',
+                status: 'Pendente'
+            },
+            {
+                date: '09/06/2025 15:16:29',
+                user: 'Gerente de Marketing',
+                actionType: 'Aprovação',
+                description: 'Aprovou campanha CAM-2025-001',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:30',
+                user: 'Sistema',
+                actionType: 'Integração',
+                description: 'Atualizou status na Partnership',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:31',
+                user: 'Partnership',
+                actionType: 'Validação',
+                description: 'Validou configuração da campanha',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:32',
+                user: 'Sistema',
+                actionType: 'Registro',
+                description: 'Campanha ativa e em execução',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:33',
+                user: 'Analista de Marketing',
+                actionType: 'Cadastro',
+                description: 'Criou nova campanha CAM-2025-002',
+                status: 'Pendente'
+            },
+            {
+                date: '09/06/2025 15:16:34',
+                user: 'Sistema',
+                actionType: 'Validação',
+                description: 'Validou campos obrigatórios',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:35',
+                user: 'Brierley',
+                actionType: 'Validação',
+                description: 'Validou Reward UUID CAM-2025-002',
+                status: 'Sucesso'
+            },
+            {
+                date: '09/06/2025 15:16:36',
+                user: 'Sistema',
+                actionType: 'Registro',
+                description: 'Campanha enviada para aprovação',
+                status: 'Pendente'
+            }
+        ];
+
+        // Working arrays
+        let auditLogs = [...auditLogsData];
+        let originalAuditLogs = [...auditLogsData];
+        let totalCampaigns = campaigns.length;
+        let totalAuditLogs = auditLogs.length;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            totalCampaigns = campaigns.length;
+            totalAuditLogs = auditLogs.length;
+            loadCampaigns(1);
+            loadAuditLogs(1);
+            updateCampaignsPagination(totalCampaigns);
+            updateAuditLogsPagination(totalAuditLogs);
+
+            // Add event listeners for search
+            document.getElementById('campaignSearch').addEventListener('input', (e) => {
+                searchCampaigns(e.target.value);
+            });
+
+            document.getElementById('auditSearch').addEventListener('input', (e) => {
+                searchAuditLogs(e.target.value);
+            });
+
+            // Add pagination event listeners
+            document.getElementById('campaignsPrevious').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadCampaigns(currentPage);
+                    updateCampaignsPagination(totalCampaigns);
+                }
+            });
+
+            document.getElementById('campaignsNext').addEventListener('click', () => {
+                const totalPages = Math.ceil(totalCampaigns / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadCampaigns(currentPage);
+                    updateCampaignsPagination(totalCampaigns);
+                }
+            });
+
+            document.getElementById('auditLogsPrevious').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadAuditLogs(currentPage);
+                    updateAuditLogsPagination(totalAuditLogs);
+                }
+            });
+
+            document.getElementById('auditLogsNext').addEventListener('click', () => {
+                const totalPages = Math.ceil(totalAuditLogs / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadAuditLogs(currentPage);
+                    updateAuditLogsPagination(totalAuditLogs);
+                }
+            });
+        });
+
+        // Helper functions
+        function formatDateTime(dateString) {
+            return new Date(dateString).toLocaleString('pt-BR');
+        }
+
+        function getStatusClass(status) {
+            const statusMap = {
+                'Em Análise': 'warning',
+                'Aprovada': 'success',
+                'Rejeitada': 'danger',
+                'Pendente': 'info',
+                'Sucesso': 'success'
+            };
+            return statusMap[status] || 'secondary';
+        }
+
+        // Campaigns functions
+        function loadCampaigns(page = 1) {
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pageCampaigns = campaigns.slice(startIndex, endIndex);
+            
+            const campaignsTable = document.getElementById('campaignsTableBody');
+            campaignsTable.innerHTML = '';
+            
+            pageCampaigns.forEach(campaign => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${campaign.id}</td>
+                    <td>${campaign.description}</td>
+                    <td>${campaign.type}</td>
+                    <td><span class="badge bg-${getStatusClass(campaign.status)}">${campaign.status}</span></td>
+                    <td>${campaign.creationDate}</td>
+                    <td>
+                        ${campaign.actions.map(action => `
+                            <button class="btn btn-${action.class}" onclick="${action.onclick}">
+                                <i class="bi ${action.icon}"></i> ${action.text}
+                            </button>
+                        `).join('')}
+                    </td>
+                `;
+                campaignsTable.appendChild(row);
+            });
+        };
+
+        function updateCampaignsPagination(total) {
+            const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+            document.getElementById('campaignsCount').textContent = total;
+            document.getElementById('campaignsCurrentPage').querySelector('a').textContent = currentPage;
+            document.getElementById('campaignsPrevious').classList.toggle('disabled', currentPage === 1);
+            document.getElementById('campaignsNext').classList.toggle('disabled', currentPage === totalPages);
+        };
+
+        function loadAuditLogs(page = 1) {
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pageAuditLogs = auditLogs.slice(startIndex, endIndex);
+            
+            const auditLogsTable = document.getElementById('auditLogsTableBody');
+            auditLogsTable.innerHTML = '';
+            
+            pageAuditLogs.forEach(log => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatDateTime(log.date)}</td>
+                    <td>${log.user}</td>
+                    <td>${log.actionType}</td>
+                    <td>${log.description}</td>
+                    <td><span class="badge bg-${getStatusClass(log.status)}">${log.status}</span></td>
+                `;
+                auditLogsTable.appendChild(row);
+            });
+        };
+
+        function updateAuditLogsPagination(total) {
+            const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+            document.getElementById('auditLogsCount').textContent = total;
+            document.getElementById('auditLogsCurrentPage').querySelector('a').textContent = currentPage;
+            document.getElementById('auditLogsPrevious').classList.toggle('disabled', currentPage === 1);
+            document.getElementById('auditLogsNext').classList.toggle('disabled', currentPage === totalPages);
+        };
+
+        function approveCampaign(campaignId) {
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (campaign) {
+                campaign.status = 'Aprovada';
+                loadCampaigns(currentPage);
+            }
+        };
+
+        function rejectCampaign(campaignId) {
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (campaign) {
+                campaign.status = 'Rejeitada';
+                loadCampaigns(currentPage);
+            }
+        };
+
+        function searchCampaigns(searchTerm) {
+            if (!searchTerm) {
+                campaigns = [...originalCampaigns];
+            } else {
+                campaigns = originalCampaigns.filter(campaign =>
+                    campaign.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    campaign.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    campaign.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    campaign.status.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            totalCampaigns = campaigns.length;
+            loadCampaigns(1);
+            updateCampaignsPagination(totalCampaigns);
+        };
+
+        function searchAuditLogs(searchTerm) {
+            if (!searchTerm) {
+                auditLogs = [...originalAuditLogs];
+            } else {
+                auditLogs = originalAuditLogs.filter(log =>
+                    log.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    log.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    log.actionType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    log.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    log.status.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            totalAuditLogs = auditLogs.length;
+            loadAuditLogs(1);
+            updateAuditLogsPagination(totalAuditLogs);
+        };
+
+        function updateAuditLogsPagination(total) {
+            const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+            document.getElementById('auditLogsCount').textContent = total;
+            document.getElementById('auditLogsCurrentPage').querySelector('a').textContent = currentPage;
+            document.getElementById('auditLogsPrevious').classList.toggle('disabled', currentPage === 1);
+            document.getElementById('auditLogsNext').classList.toggle('disabled', currentPage === totalPages);
+        };
+
+
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            totalCampaigns = campaigns.length;
+            totalAuditLogs = auditLogs.length;
+            loadCampaigns(1);
+            loadAuditLogs(1);
+            updateCampaignsPagination(totalCampaigns);
+            updateAuditLogsPagination(totalAuditLogs);
+
+            // Add event listeners for search
+            document.getElementById('campaignSearch').addEventListener('input', (e) => {
+                searchCampaigns(e.target.value);
+            });
+
+            document.getElementById('auditSearch').addEventListener('input', (e) => {
+                searchAuditLogs(e.target.value);
+            });
+
+            // Add pagination event listeners
+            document.getElementById('campaignsPrevious').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadCampaigns(currentPage);
+                    updateCampaignsPagination(totalCampaigns);
+                }
+            });
+
+            document.getElementById('campaignsNext').addEventListener('click', () => {
+                const totalPages = Math.ceil(totalCampaigns / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadCampaigns(currentPage);
+                    updateCampaignsPagination(totalCampaigns);
+                }
+            });
+
+            document.getElementById('auditLogsPrevious').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadAuditLogs(currentPage);
+                    updateAuditLogsPagination(totalAuditLogs);
+                }
+            });
+
+            document.getElementById('auditLogsNext').addEventListener('click', () => {
+                const totalPages = Math.ceil(totalAuditLogs / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadAuditLogs(currentPage);
+                    updateAuditLogsPagination(totalAuditLogs);
+                }
+            });
+        });
+
+
+    </script>
+</body>
+</html>

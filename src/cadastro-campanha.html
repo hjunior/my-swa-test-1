@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Campanha - Especialista de Marketing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Sistema de Campanhas</a>
+                <div class="navbar-nav ms-auto">
+                    <span class="nav-item nav-link">Bem-vindo, Especialista de Marketing</span>
+                    <a class="nav-item nav-link" href="login.html">Sair</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="form-container">
+            <h2>Cadastro de Nova Campanha</h2>
+            
+            <form id="campaignForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="id" class="form-label">ID da Campanha</label>
+                    <input type="text" class="form-control" id="id" required>
+                    <div class="invalid-feedback">Por favor, insira um ID válido.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="configType" class="form-label">Tipo de Configuração</label>
+                    <select class="form-select" id="configType" required>
+                        <option value="">Selecione...</option>
+                        <option value="personal">Personal</option>
+                        <option value="shareable">Shareable</option>
+                    </select>
+                    <div class="invalid-feedback">Por favor, selecione um tipo de configuração.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="rewardUuid" class="form-label">Reward UUID</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="rewardUuid" required>
+                        <button class="btn btn-outline-secondary" type="button" id="validateReward">Validar Reward</button>
+                    </div>
+                    <div class="invalid-feedback">Por favor, insira um Reward UUID válido.</div>
+                    <div id="rewardValidationStatus" class="mt-2"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descrição</label>
+                    <textarea class="form-control" id="description" rows="3" required></textarea>
+                    <div class="invalid-feedback">Por favor, insira uma descrição.</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="startDate" class="form-label">Data de Início</label>
+                        <input type="text" class="form-control" id="startDate" required>
+                        <div class="invalid-feedback">Por favor, selecione uma data de início.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="endDate" class="form-label">Data de Término</label>
+                        <input type="text" class="form-control" id="endDate" required>
+                        <div class="invalid-feedback">Por favor, selecione uma data de término.</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="rewardExpiration" class="form-label">Data de Expiração da Recompensa</label>
+                        <input type="text" class="form-control" id="rewardExpiration" required>
+                        <div class="invalid-feedback">Por favor, selecione uma data de expiração.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="currentRedemptions" class="form-label">Redenções Atuais</label>
+                        <input type="number" class="form-control" id="currentRedemptions" min="0" required>
+                        <div class="invalid-feedback">Por favor, insira um número válido de redenções.</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Validação Anti-Fraude</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="antiFraud" id="phoneValidation" value="phone" required>
+                        <label class="form-check-label" for="phoneValidation">Validação por Telefone</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="antiFraud" id="emailValidation" value="email">
+                        <label class="form-check-label" for="emailValidation">Validação por Email</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="isExtractable" required>
+                        <label class="form-check-label" for="isExtractable">Campanha Extraível</label>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Salvar Campanha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize date pickers
+        flatpickr("#startDate", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
+        flatpickr("#endDate", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
+        flatpickr("#rewardExpiration", {
+            dateFormat: "Y-m-d",
+            minDate: "today"
+        });
+
+        // Form validation
+        const form = document.getElementById('campaignForm');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+
+            if (form.checkValidity()) {
+                // Simulate API call
+                fetch('/api/campaigns', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: document.getElementById('id').value,
+                        configType: document.getElementById('configType').value,
+                        rewardUuid: document.getElementById('rewardUuid').value,
+                        description: document.getElementById('description').value,
+                        startDate: document.getElementById('startDate').value,
+                        endDate: document.getElementById('endDate').value,
+                        rewardExpiration: document.getElementById('rewardExpiration').value,
+                        currentRedemptions: document.getElementById('currentRedemptions').value,
+                        antiFraud: document.querySelector('input[name="antiFraud"]:checked').value,
+                        isExtractable: document.getElementById('isExtractable').checked
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Campanha cadastrada com sucesso!');
+                    window.location.href = 'login.html';
+                })
+                .catch(error => {
+                    alert('Erro ao cadastrar campanha');
+                });
+            }
+        });
+
+        // Reward UUID validation
+        document.getElementById('validateReward').addEventListener('click', function() {
+            const rewardUuid = document.getElementById('rewardUuid').value;
+            const statusDiv = document.getElementById('rewardValidationStatus');
+            
+            // Simulate API call to Brierley
+            fetch(`/api/brierley/validate/${rewardUuid}`)
+                .then(response => response.json())
+                .then(data => {
+                    statusDiv.innerHTML = data.valid ? 
+                        `<div class="alert alert-success">Reward UUID válido</div>` :
+                        `<div class="alert alert-danger">Reward UUID inválido</div>`;
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = `<div class="alert alert-danger">Erro ao validar Reward UUID</div>`;
+                });
+        });
+    </script>
+</body>
+</html>
