@@ -1,3 +1,4 @@
+
 {
   "routes": [
     {
@@ -6,8 +7,12 @@
       "statusCode": 302
     },
     {
+      "route": "/login.html",
+      "allowedRoles": ["anonymous"]
+    },
+    {
       "route": "/*",
-      "allowedRoles": [ "authenticated" ]
+      "allowedRoles": ["authenticated"]
     }
   ],
   "responseOverrides": {
