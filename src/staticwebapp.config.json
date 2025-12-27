@@ -10,12 +10,8 @@
       "allowedRoles": ["anonymous"]
     },
     {
-      "route": "/*.html",
+      "route": "/*",
       "allowedRoles": ["authenticated"]
-    },
-    {
-      "route": "/logout",
-      "redirect": "/.auth/logout"
     }
   ],
   "responseOverrides": {
