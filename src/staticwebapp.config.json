@@ -18,21 +18,22 @@
       "allowedRoles": ["authenticated"]
     }
   ],
+
   "responseOverrides": {
     "401": {
       "statusCode": 302,
       "redirect": "/.auth/login/aad"
-    },
-  
-"auth": {
-  "rolesSource": "roles",
-  "identityProviders": {
-    "azureActiveDirectory": {
-      "registration": {
-        "openIdIssuer": "https://login.microsoftonline.com/19da1f3c-d958-44ea-850d-195c1502525c/v2.0"
+    }
+  },
+
+  "auth": {
+    "rolesSource": "roles",
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "registration": {
+          "openIdIssuer": "https://login.microsoftonline.com/19da1f3c-d958-44ea-850d-195c1502525c/v2.0"
+        }
       }
     }
-  }
-}
   }
 }
