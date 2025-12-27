@@ -27,7 +27,7 @@
   },
 
   "auth": {
-    "rolesSource": "roles",
+    "rolesSource": "DEFAULT",
     "identityProviders": {
       "azureActiveDirectory": {
         "registration": {
