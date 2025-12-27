@@ -10,7 +10,7 @@
       "allowedRoles": ["anonymous"]
     },
     {
-      "route": "/*",
+      "route": "/*.html",
       "allowedRoles": ["authenticated"]
     },
     {
