@@ -15,14 +15,14 @@
     },
     {
       "route": "/*",
-      "allowedRoles": ["authenticated"]
+      "allowedRoles": ["anonymous"]
     }
   ],
 
   "responseOverrides": {
     "401": {
       "statusCode": 302,
-      "redirect": "/.auth/login/github"
+      "redirect": "/.auth/login/aad"
     }
   }
 }
