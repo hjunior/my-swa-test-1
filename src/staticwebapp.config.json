@@ -11,7 +11,7 @@
           "registration": {
             "clientIdSettingName": "MY_PROVIDER_CLIENT_ID",
             "clientCredential": {
-              "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET"
+              "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET_APP_SETTING_NAME"
             },
             "openIdConnectConfiguration": {
               "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/oauth2/default/.well-known/openid-configuration"
@@ -34,7 +34,7 @@
   ],
   "responseOverrides": {
     "401": {
-      "redirect": "/.auth/login/customOpenIdConnect/okta",
+      "redirect": "/.auth/login/okta",
       "statusCode": 302
     }
   }
