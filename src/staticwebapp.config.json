@@ -23,28 +23,28 @@
   "responseOverrides": {
     "401": {
       "statusCode": 302,
-      "redirect": "/.auth/login/customOpenIdConnect/myProvider"
+      "redirect": "/.auth/login/okta"
     }
   },
 
   "auth": {
     "identityProviders": {
       "customOpenIdConnectProviders": {
-        "myProvider": {
+        "okta": {
           "registration": {
             "clientIdSettingName": "MY_PROVIDER_CLIENT_ID",
             "clientCredential": {
               "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET_APP_SETTING_NAME"
             },
             "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://login.dev.circlek.eu/.well-known/openid-configuration"
+              "wellKnownOpenIdConfiguration": "https://login.dev.circlek.com/.well-known/openid-configuration"
             }
           },
           "login": {
             "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
             "scopes": [
-              "ngrp_wallet",
-              "eu_retail_product_data",
+              "us_easypay_cardstatus",
+              "loyalty_sweepstakes.api",
               "forecourt.api"
             ],
             "loginParameterNames": []
