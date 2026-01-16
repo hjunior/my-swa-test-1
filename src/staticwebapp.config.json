@@ -10,7 +10,7 @@
               "clientSecretSettingName": "L3oMQhRK2cCKzJE8Aizvn7mHlWb7Bcuisr0xv4OkoB6-fFbgXzdB0Q6TyAeNJi6V"
             },
             "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/.well-known/openid-configuration"
+              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/oauth2/default/.well-known/openid-configuration"
             }
           },
           "login": {
