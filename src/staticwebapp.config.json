@@ -14,7 +14,7 @@
               "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET_APP_SETTING_NAME"
             },
             "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://login.dev.circlek.com/.well-known/openid-configuration"
+              "wellKnownOpenIdConfiguration": "https://login.dev.circlek.com/oauth2/aus12id6i0cJ7p0MA0h8/.well-known/openid-configuration"
             }
           },
           "login": {
