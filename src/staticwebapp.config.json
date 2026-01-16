@@ -5,12 +5,12 @@
       "customOpenIdConnectProviders": {
         "okta": {
           "registration": {
-            "clientIdSettingName": "0oaz93n9b4ZutRmJJ697",
+            "clientIdSettingName": "0oaz92pw5nxzHkjxy697",
             "clientCredential": {
-              "clientSecretSettingName": "L3oMQhRK2cCKzJE8Aizvn7mHlWb7Bcuisr0xv4OkoB6-fFbgXzdB0Q6TyAeNJi6V"
+              "clientSecretSettingName": "_x0CnAk22svuR8sIgKORjuW4RyV-UjSzmqgWXbtewE21dfB3mEAyCcsvoQSzVUgu"
             },
             "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/oauth2/default/.well-known/openid-configuration"
+              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/.well-known/openid-configuration"
             }
           },
           "login": {
