@@ -1,3 +1,4 @@
+
 {
   "routes": [
     {
@@ -15,17 +16,17 @@
     },
     {
       "route": "/*",
-      "allowedRoles": ["anonymous"]
+      "allowedRoles": ["authenticated"]
     }
   ],
 
   "responseOverrides": {
     "401": {
       "statusCode": 302,
-      "redirect": "/.auth/login/okta"
+      "redirect": "/.auth/login/customOpenIdConnect/myProvider"
     }
   },
-  
+
   "auth": {
     "identityProviders": {
       "customOpenIdConnectProviders": {
@@ -36,12 +37,16 @@
               "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET_APP_SETTING_NAME"
             },
             "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://https://login.dev.circlek.eu/.well-known/openid-configuration"
+              "wellKnownOpenIdConfiguration": "https://login.dev.circlek.eu/.well-known/openid-configuration"
             }
           },
           "login": {
             "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-            "scopes": ["ngrp_wallet", "eu_retail_product_data", "forecourt.api"],
+            "scopes": [
+              "ngrp_wallet",
+              "eu_retail_product_data",
+              "forecourt.api"
+            ],
             "loginParameterNames": []
           }
         }
