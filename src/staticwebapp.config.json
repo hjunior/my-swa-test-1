@@ -1,36 +1,28 @@
-
 {
-  "navigationFallback": {
-    "rewrite": "/index.html"
-  },
-
-  "auth": {
-    "identityProviders": {
-      "customOpenIdConnectProviders": {
-        "okta": {
-          "registration": {
-            "clientIdSettingName": "MY_PROVIDER_CLIENT_ID",
-            "clientCredential": {
-              "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET_APP_SETTING_NAME"
-            },
-            "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://login.dev.circlek.com/.well-known/openid-configuration"
-            }
-          },
-          "login": {
-            "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-            "scopes": ["openid", "profile", "email"],
-            "loginParameterNames": []
-          }
-        }
-      }
-    }
-  },
-
   "routes": [
     {
+      "route": "/",
+      "redirect": "/login.html",
+      "statusCode": 302
+    },
+    {
+      "route": "/login.html",
+      "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/logout",
+      "redirect": "/.auth/logout"
+    },
+    {
       "route": "/*",
-      "allowedRoles": ["authenticated"]
+      "allowedRoles": ["anonymous"]
     }
-  ]
+  ],
+
+  "responseOverrides": {
+    "401": {
+      "statusCode": 302,
+      "redirect": "/.auth/login/aad"
+    }
+  }
 }
