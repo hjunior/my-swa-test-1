@@ -18,8 +18,6 @@
           "login": {
             "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
             "scopes": [
-              "us_easypay_cardstatus",
-              "loyalty_sweepstakes.api",
               "forecourt.api"
             ],
             "loginParameterNames": []
