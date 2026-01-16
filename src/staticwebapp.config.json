@@ -22,7 +22,7 @@
   "responseOverrides": {
     "401": {
       "statusCode": 302,
-      "redirect": "/.auth/login/okta"
+      "redirect": "/.auth/login/customOpenIdConnectProviders/okta"
     }
   },
 
