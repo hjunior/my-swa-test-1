@@ -1,16 +1,20 @@
 
 {
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/static/*", "/images/*", "/css/*", "/js/*", "/.auth/*"]
+  },
   "auth": {
     "identityProviders": {
       "customOpenIdConnectProviders": {
         "okta": {
           "registration": {
-            "clientIdSettingName": "0oaz92pw5nxzHkjxy697",
+            "clientIdSettingName": "MY_PROVIDER_CLIENT_ID",
             "clientCredential": {
-              "clientSecretSettingName": "_x0CnAk22svuR8sIgKORjuW4RyV-UjSzmqgWXbtewE21dfB3mEAyCcsvoQSzVUgu"
+              "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET"
             },
             "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/.well-known/openid-configuration"
+              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/oauth2/default/.well-known/openid-configuration"
             }
           },
           "login": {
@@ -20,6 +24,18 @@
           }
         }
       }
+    }
+  },
+  "routes": [
+    {
+      "route": "/app/*",
+      "allowedRoles": ["authenticated"]
+    }
+  ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/customOpenIdConnect/okta",
+      "statusCode": 302
     }
   }
 }
