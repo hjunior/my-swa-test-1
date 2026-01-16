@@ -1,32 +1,5 @@
 {
-  "routes": [
-    {
-      "route": "/",
-      "redirect": "/login.html",
-      "statusCode": 302
-    },
-    {
-      "route": "/login.html",
-      "allowedRoles": ["anonymous"]
-    },
-    {
-      "route": "/logout",
-      "redirect": "/.auth/logout"
-    },
-    {
-      "route": "/*",
-      "allowedRoles": ["authenticated"]
-    }
-  ],
-
-  "responseOverrides": {
-    "401": {
-      "statusCode": 302,
-      "redirect": "/.auth/login/customOpenIdConnectProviders/okta"
-    }
-  },
-
-  "auth": {
+   "auth": {
     "identityProviders": {
       "customOpenIdConnectProviders": {
         "okta": {
@@ -41,7 +14,7 @@
           },
           "login": {
             "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-            "scopes": ["openid", "profile", "email"],
+            "scopes": ["openid"],
             "loginParameterNames": []
           }
         }
