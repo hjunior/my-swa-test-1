@@ -5,9 +5,9 @@
       "customOpenIdConnectProviders": {
         "okta": {
           "registration": {
-            "clientIdSettingName": "MY_PROVIDER_CLIENT_ID",
+            "clientIdSettingName": "0oaz93n9b4ZutRmJJ697",
             "clientCredential": {
-              "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET_APP_SETTING_NAME"
+              "clientSecretSettingName": "L3oMQhRK2cCKzJE8Aizvn7mHlWb7Bcuisr0xv4OkoB6-fFbgXzdB0Q6TyAeNJi6V"
             },
             "openIdConnectConfiguration": {
               "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/.well-known/openid-configuration"
