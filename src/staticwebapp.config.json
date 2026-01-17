@@ -2,7 +2,7 @@
   "routes": [
     {
       "route": "/app/*",
-      "allowedRoles": ["anonymous"]
+      "allowedRoles": ["authenticated"]
     }
   ],
    "auth": {
