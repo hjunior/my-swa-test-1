@@ -1,3 +1,4 @@
+
 {
   "routes": [
     {
@@ -5,7 +6,7 @@
       "allowedRoles": ["authenticated"]
     }
   ],
-   "auth": {
+  "auth": {
     "identityProviders": {
       "customOpenIdConnectProviders": {
         "okta": {
@@ -15,16 +16,22 @@
               "clientSecretSettingName": "MY_PROVIDER_CLIENT_SECRET_APP_SETTING_NAME"
             },
             "openIdConnectConfiguration": {
-              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/.well-known/openid-configuration"
+              "wellKnownOpenIdConfiguration": "https://integrator-6180820.okta.com/oauth2/default/.well-known/openid-configuration"
             }
           },
           "login": {
-            "nameClaimType": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-            "scopes": ["openid"],
+            "nameClaimType": "name",
+            "scopes": ["openid", "profile", "email"],
             "loginParameterNames": []
           }
         }
       }
+    }
+  },
+  "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/okta",
+      "statusCode": 302
     }
   }
 }
